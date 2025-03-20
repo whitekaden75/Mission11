@@ -14,8 +14,30 @@ public class BookController : ControllerBase
         _context = config;
     }
 
-    public IEnumerable<Books> Get()
+    [HttpGet]
+    public ActionResult<object> Get(int bookhowmany = 5, int pageNum = 1, string sortDirection = "asc")
     {
-        return _context.Books.ToList();
+        // Apply sorting
+        var query = sortDirection.ToLower() == "asc" 
+            ? _context.Books.OrderBy(b => b.Title)
+            : _context.Books.OrderByDescending(b => b.Title);
+            
+        var totalBooks = query.Count();
+        var totalPages = (int)Math.Ceiling((double)totalBooks / bookhowmany);
+        
+        var books = query
+            .Skip((pageNum - 1) * bookhowmany)
+            .Take(bookhowmany)
+            .ToList();
+            
+        return new
+        {
+            books = books,
+            totalPages = totalPages,
+            currentPage = pageNum,
+            pageSize = bookhowmany,
+            totalItems = totalBooks,
+            sortDirection = sortDirection
+        };
     }
 }
