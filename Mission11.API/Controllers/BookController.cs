@@ -15,21 +15,33 @@ public class BookController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<object> Get(int bookhowmany = 5, int pageNum = 1, string sortDirection = "asc")
+    public ActionResult<object> Get(int bookhowmany = 5, int pageNum = 1, string sortDirection = "asc", [FromQuery] List<string>? bookTypes = null)
     {
+        // Start the query with books as the base
+        var query = _context.Books.AsQueryable();
+
+        // Apply category filter if bookTypes is provided
+        if (bookTypes != null && bookTypes.Any())
+        {
+            query = query.Where(b => bookTypes.Contains(b.Category)); // Assuming 'Category' is the property name
+        }
+
         // Apply sorting
-        var query = sortDirection.ToLower() == "asc" 
-            ? _context.Books.OrderBy(b => b.Title)
-            : _context.Books.OrderByDescending(b => b.Title);
-            
+        query = sortDirection.ToLower() == "asc"
+            ? query.OrderBy(b => b.Title)
+            : query.OrderByDescending(b => b.Title);
+
+        // Calculate total books and total pages after filtering
         var totalBooks = query.Count();
         var totalPages = (int)Math.Ceiling((double)totalBooks / bookhowmany);
-        
+
+        // Fetch the books with pagination
         var books = query
             .Skip((pageNum - 1) * bookhowmany)
             .Take(bookhowmany)
             .ToList();
-            
+
+        // Return paginated, filtered, and sorted results
         return new
         {
             books = books,
@@ -39,5 +51,13 @@ public class BookController : ControllerBase
             totalItems = totalBooks,
             sortDirection = sortDirection
         };
+    }
+
+
+    [HttpGet("GetBookTypes")]
+    public ActionResult GetBookTypes()
+    {
+        var BookTypes = _context.Books.Select(p=>p.Category).Distinct().ToList();
+        return Ok(BookTypes);
     }
 }
