@@ -60,4 +60,61 @@ public class BookController : ControllerBase
         var BookTypes = _context.Books.Select(p=>p.Category).Distinct().ToList();
         return Ok(BookTypes);
     }
+    [HttpPost("AddBook")]
+    public IActionResult AddBook([FromBody] Books book)
+    {
+        if (book == null)
+        {
+            return BadRequest("Book cannot be null");
+        }
+
+        _context.Books.Add(book);
+        _context.SaveChanges();
+
+        return Ok(book);
+    }
+    [HttpPut("UpdateBook/{BookId}")]
+    public IActionResult UpdateBook(int BookId, [FromBody] Books book)
+    {
+        if (book == null || BookId != book.BookId)
+        {
+            return BadRequest("Book cannot be null and ID must match");
+        }
+
+        var existingBook = _context.Books.Find(BookId);
+        if (existingBook == null)
+        {
+            return NotFound("Book not found");
+        }
+
+        existingBook.Title = book.Title;
+        existingBook.Author = book.Author;
+        existingBook.Category = book.Category;
+        existingBook.Price = book.Price;
+        existingBook.Classification = book.Classification;
+        existingBook.PageCount = book.PageCount;
+        existingBook.Publisher = book.Publisher;
+        existingBook.ISBN = book.ISBN;
+        existingBook.PageCount = book.PageCount;
+
+        _context.Books.Update(existingBook);
+
+        _context.SaveChanges();
+
+        return Ok(existingBook);
+    }
+    [HttpDelete("DeleteBook/{BookId}")]
+    public IActionResult DeleteBook(int BookId)
+    {
+        var book = _context.Books.Find(BookId);
+        if (book == null)
+        {
+            return NotFound("Book not found");
+        }
+
+        _context.Books.Remove(book);
+        _context.SaveChanges();
+
+        return NoContent();
+    }
 }
