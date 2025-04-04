@@ -6,7 +6,7 @@ function CartSummary() {
   const navigate = useNavigate();
 
   // Calculate total items and total price
-  const totalItems = cart.reduce((sum, item) => sum + 1, 0);
+  const totalItems = cart.reduce((sum) => sum + 1, 0);
   const totalPrice = cart.reduce((sum, item) => sum + item.price, 0).toFixed(2);
 
   return (
