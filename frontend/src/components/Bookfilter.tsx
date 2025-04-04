@@ -13,7 +13,7 @@ function Bookfilter({
     const fetchCategories = async () => {
       try {
         const response = await fetch(
-          "https://localhost:5000/api/books/getbooktypes"
+          "https://mission13-white-backend-frb5d8aha7c5eabp.eastus-01.azurewebsites.net/api/books"
         );
         const data = await response.json();
         setCategories(data);

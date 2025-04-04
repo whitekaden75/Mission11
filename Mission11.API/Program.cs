@@ -16,7 +16,7 @@ builder.Services.AddCors( option =>
     option.AddPolicy("AllowReactApp",
         policy =>
         {
-            policy.WithOrigins("http://localhost:3000")
+            policy.WithOrigins("http://localhost:3000","https://gentle-pebble-09844091e.6.azurestaticapps.net")
                 .AllowAnyMethod()
                 .AllowAnyHeader();
         }));

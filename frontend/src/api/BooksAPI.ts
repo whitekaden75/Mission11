@@ -6,7 +6,7 @@ interface FetchBooksResponse {
 }
 
 const API_URL =
-  "https://bookproject-white-backend-gqbacjf5c9d9hed3.eastus-01.azurewebsites.net/api/books";
+  "https://mission13-white-backend-frb5d8aha7c5eabp.eastus-01.azurewebsites.net/api/books";
 export const fetchBooks = async (
   pageSize: number,
   pageNum: number,
@@ -17,7 +17,7 @@ export const fetchBooks = async (
     .map((category) => `categories=${encodeURIComponent(category)}`)
     .join("&");
 
-  const url = `https://bookproject-white-backend-gqbacjf5c9d9hed3.eastus-01.azurewebsites.net/api/books?bookhowmany=${pageSize}&pageNum=${pageNum}&sortDirection=${sortDirection}${
+  const url = `https://mission13-white-backend-frb5d8aha7c5eabp.eastus-01.azurewebsites.net/api/books?bookhowmany=${pageSize}&pageNum=${pageNum}&sortDirection=${sortDirection}${
     selectedCategories.length ? `&${categoryParams}` : ""
   }`;
 
